@@ -2,7 +2,6 @@
     font-family: sans-serif;
     text-align: center;
 }
-
 .gridDiv{
     width: 180px;
     height: 50px;
@@ -13,6 +12,7 @@
     border-radius: 5px;
     margin-left: 76px;
     margin-bottom: 10px;
+    border: 4px solid #333;
 
     .gridP{
         margin: 0 auto;
@@ -59,9 +59,23 @@
     color: rgb(0, 0, 0);
     border-radius: 5px;
     font-weight: bold;
-    
+    margin-bottom: 10px;   
 }
 .againBtn:hover{
     background-color: #ea4ca3;
 }
-
+.ticTacFooter{
+    background-color: rgb(80, 222, 235);
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 4px solid #333;
+}
+#announcer{
+    background-color: rgb(80, 222, 235);
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 4px solid #333;
+    width: 50%;
+    padding: 4px;
+    margin-left: 85px;
+}

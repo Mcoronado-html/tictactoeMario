@@ -9,7 +9,9 @@
 <body>
     <div class="grid-container">
         
-        <h2 class="header">TicTacToe</h3>
+        <h2 class="header">TicTacToe</h2>
+        <h3 id="announcer"></h3>
+
         <div class="gridTurn">
             <div class="gridDiv" id="gridDiv">
                 <p class="gridP x-icon">X Turn</p>
@@ -29,6 +31,17 @@
             <div class="cells" id="8"></div>  
         </div>
         <button class="againBtn" id="againBtn">Again</button>
+        <footer class="ticTacFooter">
+            <h3>Score Table</h3>
+            <div id="scoreTable">
+                <h4>Wins</h4>
+                <div id="winsDiv">1</div>
+                <h4>Losses</h4>
+                <div id="losesDiv">1</div>
+                <h4>Draw</h4>
+                <div id="drawDiv">1</div>
+           </div>
+        </footer>
     </div>
     <script src="index.js"></script>
 </body>

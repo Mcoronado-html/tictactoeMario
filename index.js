@@ -1,7 +1,19 @@
-
 const cells = Array.from(document.getElementsByClassName("cells"));
 const againBtn = document.getElementById("againBtn")
 const gridDiv = document.getElementById("gridDiv")
+const announcer = document.getElementById("announcer")
+const winsDiv = document.getElementById("winsDiv")
+const losesDiv = document.getElementById("losesDiv")
+const drawDiv = document.getElementById("drawDiv")
+
+winsDiv.textContent = localStorage.getItem("winsDiv") || "0"
+losesDiv.textContent = localStorage.getItem("losesDiv") || "0"
+drawDiv.textContent = localStorage.getItem("drawDiv") || "0"
+
+let winsNumber = parseInt(winsDiv.textContent);
+let losesNumber = parseInt(losesDiv.textContent);
+let drawNumber = parseInt(drawDiv.textContent);
+
 
 const winConditions = [
     [0, 1, 2],[3, 4, 5],[6, 7, 8],
@@ -19,78 +31,93 @@ function startGame(){
     cells.forEach(cell => cell.addEventListener("click", boardClick));
     againBtn.addEventListener("click", restartGame);
     updateTurnDisplay();
+    announcer.textContent = "";
+    announcer.style.display = "none";
     running = true;
-
 }
-
 function boardClick(){
-    const index = this.id;
-
-    if(cellPlaces[index] !="" || !running){
-        return;
-    }
+    const index = cells.indexOf(this);
+    if(cellPlaces[index] !="" || !running) return;
     updateBoard(this, index);
-    checkWinner();
 }
-
 function updateBoard(cell, index){
     cellPlaces[index] = currentPlayer;
     cell.textContent = currentPlayer;
     checkWinner();
-    changePlayer();
-}
 
+    if(running){changePlayer();
+    }
+
+}
 function changePlayer(){
-   currentPlayer = (currentPlayer === "X") ? "O" : "X";
-   updateTurnDisplay();
-
-   if (currentPlayer === "O" && running){
-        setTimeout(botMove, 500);
+    currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    updateTurnDisplay();
+    if (currentPlayer === "O" && running){
+        setTimeout(botMove, 300);
    }
-
 }
-
 function botMove(){
-    let emptyCells = cells.filter((cell, index) => cellPlaces[index] === "");
-    if (emptyCells.length === 0 || !running) return;
-    let randomCell = emptyCells[Math.floor(Math.random()* emptyCells.length)];
-    let index = randomCell.id;
+    let emptyCells = cells.filter((cell) => cell.textContent === "");
+    if (emptyCells.length === 0) return;
+    let randomIndex = Math.floor(Math.random() * emptyCells.length);
+    let randomCell = emptyCells[randomIndex];
+    randomCell.textContent = "O"
+    cellPlaces[cells.indexOf(randomCell)] = "O";
 
-    updateBoard(randomCell, index);
     checkWinner();
-}
 
+    if(running){
+    setTimeout(() => {
+          currentPlayer = "X"  
+          updateTurnDisplay()
+    }, 300);
+    }
+
+}
 function updateTurnDisplay() {
-    // Change the gridDiv text to show whose turn it is
-    if (currentPlayer === "X") {
-        gridDiv.innerHTML = `<p class="gridP x-icon">X Turn</p><hr><p class="gridP o-icon" style="opacity: 0.3;">O Turn</p>`;
-    } else {
-        gridDiv.innerHTML = `<p class="gridP x-icon" style="opacity: 0.3;">X Turn</p><hr><p class="gridP o-icon">O Turn</p>`;
-    }
+    setTimeout(() => {
+        if (currentPlayer === "X") {
+            gridDiv.innerHTML = `<p class="gridP x-icon">X Turn</p><hr><p class="gridP o-icon" style="opacity: 0.3;">O Turn</p>`;
+        } else {
+            gridDiv.innerHTML = `<p class="gridP x-icon" style="opacity: 0.3;">X Turn</p><hr><p class="gridP o-icon">O Turn</p>`;
+        }
+    }, 300);
 }
-
 function checkWinner(){
-    let roundWon = false;
+    for (const item of winConditions) {
+        let [pos1,pos2,pos3] = item
 
-    for(let i = 0; i < winConditions.length; i++){
-        const condition= winConditions[i];
-        const cellA = cellPlaces[condition[0]];
-        const cellB = cellPlaces[condition[1]];
-        const cellC = cellPlaces[condition[2]];
+        if (cells[pos1].textContent != "" && 
+            cells[pos1].textContent === cells[pos2].textContent && 
+            cells[pos1].textContent === cells[pos3].textContent) {
 
-        if(cellA == "" || cellB == "" || cellC == ""){
-            continue;
-        }
-        if(cellA == cellB && cellB == cellC){
-            roundWon = true;
-            break;
+            running = false; 
+            winsNumber++;
+            winsDiv.textContent = winsNumber;
+            localStorage.setItem("winsDiv", winsNumber);
+
+            announcer.textContent = "Wins!";
+            announcer.style.display = "block";
+            return;
         }
     }
-
-    if (roundWon) {
-        running = false;
-    }else if(!cellPlaces.includes("")){
-       running = false;
+    if (!cellPlaces.includes("")) {
+            running = false;
+            drawNumber++
+            drawDiv.textContent = drawNumber;
+            localStorage.setItem("drawDiv", drawNumber)
+            announcer.textContent = "It's a Draw!";
+            announcer.style.display = "block";  
+    }
+    if (running && currentPlayer === "X") {
+            losesNumber++;
+            losesDiv.textContent = losesNumber;
+            localStorage.setItem("losesDiv", losesNumber);
+    }
+    else if(running && currentPlayer === "O"){
+            losesNumber++;
+            losesDiv.textContent = losesNumber;
+            localStorage.setItem("losesDiv", losesNumber);
     }
 }
 
@@ -99,14 +126,8 @@ function restartGame(){
     cellPlaces = ["", "", "", "", "", "", "", "", ""];
     cells.forEach(cell => cell.textContent = "");
     updateTurnDisplay();
+    announcer.textContent = "";
+    announcer.style.display = "none"
     running = true;
-    if (runninf === true) {
-        alert("X won")
-    }else{
-        alert("You lose")
-    }
-
-
 }
-
 
