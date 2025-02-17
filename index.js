@@ -84,6 +84,7 @@ function updateTurnDisplay() {
     }, 300);
 }
 function checkWinner(){
+    console.log(drawNumber);
     for (const item of winConditions) {
         let [pos1,pos2,pos3] = item
 
@@ -91,35 +92,36 @@ function checkWinner(){
             cells[pos1].textContent === cells[pos2].textContent && 
             cells[pos1].textContent === cells[pos3].textContent) {
 
-            running = false; 
-            winsNumber++;
-            winsDiv.textContent = winsNumber;
-            localStorage.setItem("winsDiv", winsNumber);
+                if(cells[pos1].textContent === "X"){
+                announcer.textContent = "X Wins!"
+                winsNumber++;
+                winsDiv.textContent = winsNumber;
+                localStorage.setItem("winsDiv", winsNumber);  
+                running = false; 
+                }
+                if(cells[pos1].textContent === "O"){
+                announcer.textContent = "O Wins!"
+                losesNumber++;
+                losesDiv.textContent = losesNumber;
+                localStorage.setItem("losesDiv", losesNumber);
+                running = false; 
 
-            announcer.textContent = "Wins!";
+                }
             announcer.style.display = "block";
             return;
         }
-    }
-    if (!cellPlaces.includes("")) {
-            running = false;
-            drawNumber++
-            drawDiv.textContent = drawNumber;
+        if (!cellPlaces.includes("")) {
             localStorage.setItem("drawDiv", drawNumber)
+            drawNumber++
+            running = false;
+            drawDiv.textContent = drawNumber;
             announcer.textContent = "It's a Draw!";
             announcer.style.display = "block";  
+            return
+        }
+        }
     }
-    if (running && currentPlayer === "X") {
-            losesNumber++;
-            losesDiv.textContent = losesNumber;
-            localStorage.setItem("losesDiv", losesNumber);
-    }
-    else if(running && currentPlayer === "O"){
-            losesNumber++;
-            losesDiv.textContent = losesNumber;
-            localStorage.setItem("losesDiv", losesNumber);
-    }
-}
+
 
 function restartGame(){
     currentPlayer = "X";

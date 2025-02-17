@@ -67,7 +67,7 @@
 .ticTacFooter{
     background-color: rgb(80, 222, 235);
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 40%;
     border: 4px solid #333;
 }
 #announcer{
